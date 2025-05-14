@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@vaadin/router": "vaadin/router",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase": "^10.4.0",
+    "lodash": "^4.17.21",
+    "nanoid": "^3.1.23",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.10.1",
+    "process": "^0.11.10"
+  },
+  "source": "src/index.html",
+  "scripts": {
+    "dev": "parcel",
+    "build": "parcel build"
+  }
+}
