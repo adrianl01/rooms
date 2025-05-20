@@ -1,5 +1,6 @@
 import { state } from "../../state";
 import { style } from "./css";
+import { roomList } from "./roomsList";
 
 customElements.define(
   "welc-el",
@@ -23,7 +24,7 @@ customElements.define(
             </label>
             <label for="name" class="form-name__label">
                 Your Name
-                <input type="text" class="name" name="name">
+                <input type="text" class="name" name="name" maxlength="8">
             </label>
             <div class="form-div">
             <label class="text">Room Options</label>
@@ -40,33 +41,33 @@ customElements.define(
             </form>
             </div>
 `;
+      const roomListEl = document.createElement("roomlist-el");
+      roomListEl.classList.add("main-main");
       this.appendChild(div);
       this.appendChild(style);
+      this.appendChild(roomListEl);
     }
     listeners() {
       const roomOption = {
         room: "new",
       };
       const form = this.querySelector(".form") as HTMLElement;
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const form = e.target as any;
         const email = form.email.value;
         const name = form.name.value;
         const roomId = form.room.value;
-        state.data.email = email;
-        state.data.fullName = name;
-        state.data.roomId = roomId;
+        state.data.email = await email;
+        state.data.fullName = await name;
+        state.data.roomId = await roomId;
         if (roomOption.room === "existant") {
-          state.singIn(() => {
-            state.accessToRoom();
-          });
+          await state.singIn(state.accessToRoom);
         } else {
-          state.singIn(() => {
-            state.askNewRoom(() => {});
-          });
+          console.log("cb getRooms");
+          await state.singIn(state.getRooms);
+          roomList();
         }
-        console.log(state.data);
       });
 
       const buttonExistantRoom = this.querySelector(".existant-room");
