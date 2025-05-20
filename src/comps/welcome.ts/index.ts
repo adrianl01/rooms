@@ -1,6 +1,6 @@
-import { state } from "../../state";
-import { style } from "./css";
-import { roomList } from "./roomsList";
+import { state } from "../../state.js";
+import { style } from "./css.js";
+import { roomList } from "./roomsList.js";
 
 customElements.define(
   "welc-el",
@@ -64,9 +64,13 @@ customElements.define(
         if (roomOption.room === "existant") {
           await state.singIn(state.accessToRoom);
         } else {
-          console.log("cb getRooms");
+          console.log(email, name);
           await state.singIn(state.getRooms);
-          roomList();
+          if (state.data.email !== "" && state.data.fullName !== "") {
+            roomList();
+          } else {
+            alert("You must enter an email and also a name");
+          }
         }
       });
 

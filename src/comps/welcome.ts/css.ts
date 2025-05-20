@@ -15,7 +15,7 @@ min-width: 356px;
 
    .title {
        text-align: center;
-       width: 375px;
+       width: 100%;
    }
 
    .email,

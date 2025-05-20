@@ -40,15 +40,24 @@ padding: 15px;
 width: 100%;
 }
 
-.roomList-button {
+.roomList-button, .cancel, .create-room, .no-userName-cancel {
   width: 100%;
     text-decoration: none;
-    // background: transparent;
+    background: transparent;
     border: solid black 2px;
     border-radius: 8px;
     font-family: "Cal Sans", sans-serif;
     font-weight: 400;
     font-style: normal;
+}
+
+.cancel, .create-room, .no-userName-cancel {
+  margin-top: 10px;
+  height: 40px;
+  }
+  
+  .create-room {
+    background-color: rgba(130, 155, 255, 0.5);
 }
 
 .roomList-button:hover {

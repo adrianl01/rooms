@@ -49,7 +49,7 @@ const state = {
 
   async singIn(callback) {
     const cs = this.getState();
-    if (cs.email) {
+    if (cs.email && cs.fullName) {
       const fetchRes = await fetch(API_BASE_URL + "/auth", {
         method: "POST",
         headers: {
@@ -66,7 +66,7 @@ const state = {
       this.setState(cs);
       return callback();
     } else {
-      console.error("No hay un email en el state");
+      console.error("No email or fullName found");
     }
     // lunes 9/10/2023 19:16, agregar el endpoint signUp. Update: lunes 30/10/2023, ya estan todos los enpoints listos hace una semana.
   },
@@ -89,25 +89,28 @@ const state = {
     }
   },
 
-  askNewRoom(callback) {
+  async askNewRoom() {
     console.log("askNewRoom");
     const cs = state.getState();
     if (cs.userId) {
-      fetch(API_BASE_URL + "/rooms", {
-        method: "post",
+      const fetchRes = await fetch(API_BASE_URL + "/room/new", {
+        method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ userId: cs.userId }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          cs.roomId = data.id;
-          state.setState(cs);
-          callback();
-        });
+        body: JSON.stringify({ userId: cs.userId, userName: cs.fullName }),
+      });
+      const data = await fetchRes.json();
+      cs.roomId = data.id;
+      cs.rtdbRoomId = data.rtdbRoomId;
+      cs.currentRoom = {
+        id: data.id,
+        rtdbRoomId: data.rtdbRoomId,
+        owner: data.owner,
+        ownerName: cs.fullName,
+        guest: data.guest,
+      };
+      return await state.setState(cs);
     } else {
       console.error("No hay userId");
     }
