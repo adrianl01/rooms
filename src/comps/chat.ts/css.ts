@@ -70,7 +70,7 @@ color: black;
 }
 .message-p {
   margin: 0;
-  font-size: larger;
+  font-size: 24px;
 }
 
 .form-container {
@@ -98,7 +98,7 @@ color: black;
   font-weight: 400;
   font-style: normal;
   color: black;
-  font-size: large;
+  font-size: 22px;
 }
 
 .form-button {
