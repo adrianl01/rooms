@@ -68,8 +68,9 @@ color: black;
   text-align: right;
   align-self: flex-end;
 }
-.message-name, .message-p {
+.message-p {
   margin: 0;
+  font-size: larger;
 }
 
 .form-container {
@@ -97,6 +98,7 @@ color: black;
   font-weight: 400;
   font-style: normal;
   color: black;
+  font-size: large;
 }
 
 .form-button {
