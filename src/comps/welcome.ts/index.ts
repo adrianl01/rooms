@@ -1,6 +1,7 @@
 import { state } from "../../state.js";
 import { style } from "./css.js";
-import { roomList } from "./roomsList.js";
+import "./roomsList.js";
+import "./../error/index.js";
 
 customElements.define(
   "welc-el",
@@ -41,11 +42,8 @@ customElements.define(
             </form>
             </div>
 `;
-      const roomListEl = document.createElement("roomlist-el");
-      roomListEl.classList.add("main-main");
       this.appendChild(div);
       this.appendChild(style);
-      this.appendChild(roomListEl);
     }
     listeners() {
       const roomOption = {
@@ -64,12 +62,12 @@ customElements.define(
         if (roomOption.room === "existant") {
           await state.singIn(state.accessToRoom);
         } else {
-          console.log(email, name);
           await state.singIn(state.getRooms);
-          if (state.data.email !== "" && state.data.fullName !== "") {
-            roomList();
+          if (state.error.exists) {
+            console.error("Error", state.error);
+            this.showErrorSign();
           } else {
-            alert("You must enter an email and also a name");
+            this.showRoomList();
           }
         }
       });
@@ -91,6 +89,16 @@ customElements.define(
           roomText.textContent = `You'll start a new room`;
         }
       });
+    }
+    showRoomList() {
+      const el = document.createElement("roomlist-el");
+      el.classList.add("main-main");
+      document.body.appendChild(el);
+    }
+    showErrorSign() {
+      const el = document.createElement("error-el");
+      el.classList.add("main-Error-main", "blurry-bg");
+      document.body.appendChild(el);
     }
   }
 );

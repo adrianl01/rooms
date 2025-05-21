@@ -11,7 +11,7 @@ style.innerHTML = `
 }
 .header {
 color: black;
-  position: sticky;
+  position: fixed;
   top: 0;
   display: flex;
   justify-content: space-between;
@@ -43,6 +43,7 @@ color: black;
   gap: 10px;
   width: 100%;
   padding: 10px;
+  padding-top: 70px;
   background:rgb(250, 187, 187);
   // flex: 1 1 auto;
 }

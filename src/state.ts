@@ -2,7 +2,7 @@ import { onValue, push, ref } from "firebase/database";
 import { rtdb } from "./db.js";
 
 const API_BASE_URL = process.env.API_CONNECTION;
-const state = {
+export const state = {
   data: {
     email: "",
     fullName: "",
@@ -21,6 +21,54 @@ const state = {
       guest: "",
     },
   },
+  error: { exists: false },
+  errors: [
+    {
+      errorName: "errCreating",
+      errStatus: false,
+      message: "Error creating user",
+    },
+    {
+      errorName: "errJoining",
+      errStatus: false,
+      message: "Error joining room",
+    },
+    {
+      errorName: "errSending",
+      errStatus: false,
+      message: "Error sending message",
+    },
+    {
+      errorName: "errFetching",
+      errStatus: false,
+      message: "Error fetching messages",
+    },
+    {
+      errorName: "errCreatingRoom",
+      errStatus: false,
+      message: "Error creating room",
+    },
+    {
+      errorName: "errListening",
+      errStatus: false,
+      message: "Error listening to room",
+    },
+    {
+      errorName: "errAccessing",
+      errStatus: false,
+      message: "Error accessing room",
+    },
+    {
+      errorName: "errFinding",
+      errStatus: false,
+      message: "Error finding room",
+    },
+    {
+      errorName: "errClearing",
+      errStatus: false,
+      message: "Error clearing rooms",
+    },
+  ],
   listeners: [],
   init() {},
 
@@ -31,13 +79,11 @@ const state = {
     const chatroomsRef = ref(rtdb, "/rooms/" + cs.rtdbRoomId);
     await onValue(chatroomsRef, async (snapshot) => {
       const val = snapshot.val();
-
       cs.guestName = await val.guestName;
       cs.messages = await val.messages;
       return await state.setState(cs);
     });
   },
-
   getState() {
     return this.data;
   },
@@ -49,24 +95,48 @@ const state = {
 
   async singIn(callback) {
     const cs = this.getState();
-    if (cs.email && cs.fullName) {
-      const fetchRes = await fetch(API_BASE_URL + "/auth", {
+    const fetchFunc = async () =>
+      await fetch(API_BASE_URL + "/auth", {
         method: "POST",
         headers: {
+          mode: "cors",
           "content-type": "application/json",
         },
         body: JSON.stringify({ email: cs.email, fullName: cs.fullName }),
       });
-      const data = await fetchRes.json();
-      if (fetchRes.status === 404) {
-        return console.error("No se encontró el usuario");
+    if (cs.email && cs.fullName) {
+      const fetchRes = await fetchFunc();
+      if (fetchRes.status === 401) {
+        console.error("Unauthorized");
+        return;
       }
+      const data = await fetchRes.json();
       cs.userId = data.userId;
       cs.fullName = data.userData.name;
       this.setState(cs);
+      // state.errors.find(e=> e.errorName=="errCreating").errStatus = true;
       return callback();
+    } else if (cs.email && cs.fullName === "") {
+      try {
+        const fetchRes = await fetchFunc();
+        if (fetchRes.status === 404) {
+          console.error("User not found");
+          return;
+        }
+        const data = await fetchRes.json();
+        cs.userId = data.userId;
+        cs.fullName = data.userData.name;
+        this.setState(cs);
+        return callback();
+      } catch (error) {
+        state.error.exists = true;
+        state.errors.find((e) => e.errorName == "errCreating").errStatus = true;
+        return console.log(error.message);
+      }
     } else {
       console.error("No email or fullName found");
+      alert("No email or fullName found");
+      return;
     }
     // lunes 9/10/2023 19:16, agregar el endpoint signUp. Update: lunes 30/10/2023, ya estan todos los enpoints listos hace una semana.
   },
@@ -82,17 +152,16 @@ const state = {
         body: JSON.stringify({ userId: cs.userId }),
       });
       const data = await roomsRes.json();
+      await state.clearRooms();
       cs.rooms = data;
-      return state.setState(cs);
+      return await state.setState(cs);
     } else {
       console.error("No userId found");
     }
   },
-
   async askNewRoom() {
-    console.log("askNewRoom");
     const cs = state.getState();
-    if (cs.userId) {
+    if (cs.userId && cs.fullName) {
       const fetchRes = await fetch(API_BASE_URL + "/room/new", {
         method: "POST",
         headers: {
@@ -112,8 +181,15 @@ const state = {
       };
       return await state.setState(cs);
     } else {
-      console.error("No hay userId");
+      alert("No userId or fullName found");
     }
+  },
+
+  clearRooms() {
+    const cs = this.getState();
+    cs.rooms = [];
+    console.log("clearRooms", cs.rooms);
+    this.setState(cs);
   },
 
   accessToRoom(callback?) {
@@ -145,5 +221,3 @@ const state = {
     this.listeners.push(callback);
   },
 };
-
-export { state };
