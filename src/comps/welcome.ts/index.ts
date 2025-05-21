@@ -2,6 +2,7 @@ import { state } from "../../state.js";
 import { style } from "./css.js";
 import "./roomsList.js";
 import "./../error/index.js";
+import { Router } from "@vaadin/router";
 
 customElements.define(
   "welc-el",
@@ -11,6 +12,9 @@ customElements.define(
       this.listeners();
     }
     render() {
+      if (state.data.userId !== "") {
+        state.stateCleaner();
+      }
       const div = document.createElement("div");
       div.classList.add("main");
       div.innerHTML = `
@@ -61,6 +65,12 @@ customElements.define(
         state.data.roomId = await roomId;
         if (roomOption.room === "existant") {
           await state.singIn(state.accessToRoom);
+          if (state.error.exists) {
+            console.error("Error", state.error);
+            this.showErrorSign();
+          } else {
+            Router.go("/chat");
+          }
         } else {
           await state.singIn(state.getRooms);
           if (state.error.exists) {

@@ -34,6 +34,7 @@ customElements.define(
           }
         }
       });
+      this.addChatName();
     }
     listeners() {
       const cs = state.getState();
@@ -42,7 +43,6 @@ customElements.define(
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const message = (input as HTMLInputElement).value;
-        console.log(message);
         const messageData = {
           from: cs.fullName,
           message: message,
@@ -50,6 +50,19 @@ customElements.define(
         };
         state.sendMessageToRoom(cs.rtdbRoomId, messageData);
       });
+    }
+    addChatName() {
+      setTimeout(() => {
+        let chatGuest;
+        const cs = state.getState();
+        if (cs.currentRoom.owner == state.data.userId) {
+          chatGuest = cs.currentRoom.guestName;
+        } else {
+          chatGuest = cs.currentRoom.ownerName;
+        }
+        const chatName = document.querySelector(".header h5");
+        return (chatName.innerHTML = chatGuest);
+      }, 1000);
     }
     appendMessage(message) {
       const nameSt = state.data.fullName;
@@ -77,7 +90,6 @@ customElements.define(
         `;
       }
       messagesContainer.appendChild(div);
-      console.log(messagesContainer.scrollTop, messagesContainer.scrollHeight);
       setTimeout(() => {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         const messages = document.querySelectorAll(".message, .message-owner");
@@ -89,7 +101,7 @@ customElements.define(
       div.classList.add("main");
       div.innerHTML = `
         <div class="header">
-        <h5>${state.data.guestName}</h5>
+        <h5></h5>
       <h5 id="roomId">${state.data.roomId}</h5>        
         </div>
         <div class="messages">

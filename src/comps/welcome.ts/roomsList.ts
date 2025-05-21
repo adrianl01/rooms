@@ -15,7 +15,11 @@ customElements.define(
       div.classList.add("main-container");
       div.innerHTML = `
             <h4>Previous rooms you've joined</h4>
-            <ul class="room-list"></ul>
+            <ul class="room-list">${
+              state.data.rooms.length == 0
+                ? `You haven't created any rooms yet`
+                : ``
+            }</ul>
             <button class="cancel">Cancel</button>
             <button class="create-room">Create a new room</button>
         `;
@@ -39,7 +43,6 @@ customElements.define(
       createRoomBtn?.addEventListener("click", async (e) => {
         e.preventDefault();
         await state.askNewRoom();
-        Router.go("/chat");
         this.closeList();
       });
     }
@@ -61,7 +64,7 @@ customElements.define(
           const buttonEl = document.createElement("button");
           buttonEl.classList.add("roomList-button");
           buttonEl.innerHTML = `
-                  <h5>You own this room. Room Id:${r.id}</h5>
+                  <h5>You own this room. Room Id: ${r.id}</h5>
             `;
           return roomListEl.appendChild(buttonEl);
         }
@@ -74,7 +77,7 @@ customElements.define(
       cs.guestName = roomData.guestName;
       cs.currentRoom = roomData;
       state.setState(cs);
-      const { Router } = await import("@vaadin/router");
+
       Router.go("/chat");
       this.closeList();
     }
