@@ -25,9 +25,11 @@ color: black;
 }
 
 .header h5 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 400;
+ margin: 0;
+    font-size: 23px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
 }
 
 .title {
