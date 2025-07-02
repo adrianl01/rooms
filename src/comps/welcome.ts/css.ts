@@ -137,4 +137,16 @@ sl-input::part(input):-webkit-autofill:focus {
   --sl-color-primary-100: #fc3434;
   --sl-input-focus-ring-color:rgb(255, 255, 255);
    }
+  .loading-sign {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.7);
+  z-index: 9999;
+  font-size: 1.2rem;
+  color: #fc3434;
+}
    `;

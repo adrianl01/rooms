@@ -101,7 +101,12 @@ customElements.define(
             Router.go("/chat");
           }
         } else if (roomOption.room === "new") {
+          const loadingDiv = document.createElement("div");
+          loadingDiv.className = "loading-sign";
+          loadingDiv.innerHTML = `<sl-spinner style="font-size: 2rem; color: #fc3434;"></sl-spinner><span>Loading rooms...</span>`;
+          document.body.appendChild(loadingDiv);
           await state.singIn(state.getRooms);
+          loadingDiv.remove();
           if (state.error.exists) {
             console.error("Error", state.error);
             this.showErrorSign();
