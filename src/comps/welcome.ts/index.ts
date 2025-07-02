@@ -18,33 +18,52 @@ customElements.define(
       const div = document.createElement("div");
       div.classList.add("main");
       div.innerHTML = `
-        <div class="header"></div>
-        <h2 class="title">iMessages😃🤗😜</h2>
-        <h4>Write down your email and name to get started✍</h4>
-      <div class="form-container"/>
-        <form class="form">
-            <label for="email" class="form-email__label">
-                Your Email
-                <input type="email" class="email" name="email">
-            </label>
-            <label for="name" class="form-name__label">
-                Your Name
-                <input type="text" class="name" name="name" maxlength="8">
-            </label>
-            <div class="form-div">
-            <label class="text">Room Options</label>
-            <div id="roomText">You'll start a new room</div>
-            <div for="room" class="form__room">
-                <button class="existant-room">Existant Room</button>
-            </div>
-            </div>
-            <div class="form-room-id">
-            Room Id
-            <input type="text" class="room-id" name="room">
+  <div class="header"></div>
+  <h2 class="title">iMessages😃🤗😜</h2>
+  <h4>Write down your email and name to get started✍</h4>
+  <div class="form-container">
+    <form class="form">
+      <sl-input 
+        label="Your Email" 
+        name="email" 
+        type="email" 
+        class="email" 
+        pill 
+        required
+        style="--sl-input-background-color: #fff0f0; --sl-input-color: #fc3434;">
+      </sl-input>
+      <sl-input 
+        label="Your Name" 
+        name="name" 
+        maxlength="8" 
+        class="name" 
+        pill 
+        style="--sl-input-background-color: #fff0f0; --sl-input-color: #fc3434;">
+      </sl-input>
+      <div class="form-div">
+        <label class="text">Room Options</label>
+        <div id="roomText">You'll start a new room</div>
+        <div class="form__room">
+          <sl-button variant="default" class="existant-room"; color: white;" pill>
+            Existant Room
+          </sl-button>
         </div>
-            <button type="submit" class="form-button">Start</button>
-            </form>
-            </div>
+      </div>
+      <div class="form-room-id">
+        Room Id
+        <sl-input 
+          name="room" 
+          class="room-id" 
+          maxlength="4" 
+          pill 
+          style="--sl-input-background-color: #fff0f0;">
+        </sl-input>
+      </div>
+      <sl-button type="submit" class="form-button" variant="primary" color: white;" pill>
+        Start
+      </sl-button>
+    </form>
+  </div>
 `;
       this.appendChild(div);
       this.appendChild(style);
@@ -56,13 +75,23 @@ customElements.define(
       const form = this.querySelector(".form") as HTMLElement;
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const form = e.target as any;
-        const email = form.email.value;
-        const name = form.name.value;
-        const roomId = form.room.value;
+        const emailInput = this.querySelector('sl-input[name="email"]') as any;
+        const nameInput = this.querySelector('sl-input[name="name"]') as any;
+        const roomInput = this.querySelector('sl-input[name="room"]') as any;
+        const email = emailInput?.value;
+        const name = nameInput?.value;
+        const roomId = roomInput?.value;
+        if (!email) {
+          return console.error("Email is required");
+        }
+        if (!email.includes("@")) {
+          console.error("Please enter a valid email");
+          return;
+        }
         state.data.email = await email;
         state.data.fullName = await name;
         state.data.roomId = await roomId;
+        console.log(roomOption);
         if (roomOption.room === "existant") {
           await state.singIn(state.accessToRoom);
           if (state.error.exists) {
@@ -71,7 +100,7 @@ customElements.define(
           } else {
             Router.go("/chat");
           }
-        } else {
+        } else if (roomOption.room === "new") {
           await state.singIn(state.getRooms);
           if (state.error.exists) {
             console.error("Error", state.error);

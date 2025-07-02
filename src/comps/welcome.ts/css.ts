@@ -18,12 +18,12 @@ min-width: 356px;
        width: 100%;
    }
 
-   .email,
-   .name,
-   .room-id {
-       border: solid 2px;
-       border-radius: 8px;
-   }
+//    .email,
+//    .name,
+//    .room-id {
+//        border: solid 2px;
+//        border-radius: 8px;
+//    }
 
    .form-container {
    width:100%;
@@ -38,6 +38,7 @@ min-width: 356px;
        width: 100%;
        padding: 20px;
        background-color: rgba(255, 130, 130, 1);
+
    }
 
    .form-email__label,
@@ -60,7 +61,7 @@ min-width: 356px;
     width: 100%;
     text-decoration: none;
     background: transparent;
-    border: solid black 2px;
+    // border: solid black 2px;
     border-radius: 8px;
     font-family: "Cal Sans", sans-serif;
     font-weight: 400;
@@ -81,13 +82,13 @@ min-width: 356px;
        border: none;
    }
 
-   .existant-room:hover {
-       background-color: rgb(252, 52, 52);
-   }
+//    .existant-room:hover {
+//        background-color: rgb(252, 52, 52);
+//    }
 
-   .new-room:hover {
-       background-color: rgb(252, 52, 52);
-   }
+//    .new-room:hover {
+//        background-color: rgb(252, 52, 52);
+//    }
 
    .form-room-id {
        display: none;
@@ -102,14 +103,38 @@ min-width: 356px;
      width: 100%;
     text-decoration: none;
     background: transparent;
-    border: solid black 2px;
+    // border: solid black 2px;
     border-radius: 8px;
     font-family: "Cal Sans", sans-serif;
     font-weight: 400;
     font-style: normal;
    }
 
-   .form-button:hover {
-       background-color: rgb(252, 52, 52);
+//    .form-button:hover {
+//        background-color: rgb(252, 52, 52);
+//    }
+   sl-input::part(base) {
+  --sl-input-border-color: #fc3434;
+  --sl-input-focus-ring-color: #fc3434;
+}
+  sl-input::part(input):-webkit-autofill,
+sl-input::part(input):-webkit-autofill:focus {
+  -webkit-text-fill-color: #fc3434; 
+  box-shadow: 0 0 0 1000px #fff0f0 inset !important; /* match your bg */
+  caret-color: #fc3434;
+}
+  sl-input::part(input):-moz-autofill {
+  color: #fc3434 !important;
+  background-color: #fff0f0 !important;
+}
+   sl-button::part(base) {
+       font-family: "Cal Sans", sans-serif;
+         --sl-color-primary-600: #fc3434;
+  --sl-color-primary-500: #fc3434;
+  --sl-color-primary-400: #fc3434;
+  --sl-color-primary-300: #fc3434;
+  --sl-color-primary-200: #fc3434;
+  --sl-color-primary-100: #fc3434;
+  --sl-input-focus-ring-color:rgb(255, 255, 255);
    }
    `;
